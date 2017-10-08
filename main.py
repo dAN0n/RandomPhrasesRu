@@ -12,11 +12,14 @@ def randomPhrase(nounList, adjList, count=1):
         randNoun = random.choice(nounList)
         randAdj  = random.choice(adjList)
 
+        # Collect number and gender for inflect phrase
         for i in mp.parse(randNoun):
-            # Choose definition
             if i.tag.POS == "NOUN" and i.tag.case == "nomn":
+                # Unchangeable word
+                if ("Fixd" in i.tag) == True:
+                    number = "fixd"
                 # Only plural number
-                if ("Pltm" in i.tag) == True:
+                elif ("Pltm" in i.tag) == True:
                     number = "plur"
                 # Only single number
                 elif ("Sgtm" in i.tag) == True:
@@ -26,7 +29,7 @@ def randomPhrase(nounList, adjList, count=1):
                     number = random.choice(("sing", "plur"))
 
                 # Change only gender on adj
-                if number == "sing":
+                if number == "sing" or number == "fixd":
                     gender = i.tag.gender
                     if gender == None: gender = "masc"
                     inflectVal = {gender}
@@ -35,9 +38,9 @@ def randomPhrase(nounList, adjList, count=1):
                     inflectVal = {number}
                     # Change number of noun
                     randNoun = i.inflect(inflectVal).word
-                
+
+        # Inflect adj
         for i in mp.parse(randAdj):
-            # Choose definition
             if i.tag.POS == "ADJF" and i.tag.case == "nomn":
                 # Change number or gender of adj
                 randAdj = i.inflect(inflectVal).word
@@ -51,11 +54,11 @@ if __name__ == '__main__':
     main_dir = os.path.split(os.path.abspath(__file__))[0]
 
     # Load nouns to list
-    with open(os.path.join(main_dir, 'noun'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(main_dir, 'vocab/noun'), 'r', encoding='utf-8') as f:
         nouns = f.read().splitlines()
 
     # Load adjectives to list
-    with open(os.path.join(main_dir, 'adj'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(main_dir, 'vocab/adj'), 'r', encoding='utf-8') as f:
         adjectives = f.read().splitlines()
 
     phrase = randomPhrase(nouns, adjectives, 10)
