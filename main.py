@@ -33,11 +33,13 @@ def randomPhrase(nounList, adjList, count=1):
                     gender = i.tag.gender
                     if gender == None: gender = "masc"
                     inflectVal = {gender}
+                    break
                 # Change only number on noun and adj
                 else:
                     inflectVal = {number}
                     # Change number of noun
                     randNoun = i.inflect(inflectVal).word
+                    break
 
         # Inflect adj
         for i in mp.parse(randAdj):
